@@ -12,11 +12,11 @@ import asyncio
 import json
 import logging
 import os
+from pathlib import Path
 import random
 import secrets
 import sys
 import warnings
-from datetime import datetime
 from datetime import timezone
 from importlib import import_module
 from textwrap import dedent
@@ -174,57 +174,6 @@ flags = {
     )
 }
 
-
-page_template = """
-{% extends "templates/page.html" %}
-
-{% block header_buttons %}
-{{super()}}
-
-<span>
-    <a href='{{hub_control_panel_url}}'
-       class='btn btn-default btn-sm navbar-btn pull-right'
-       style='margin-right: 4px; margin-left: 2px;'>
-        Control Panel
-    </a>
-</span>
-{% endblock %}
-
-{% block logo %}
-<img src='{{logo_url}}' alt='Jupyter Notebook'/>
-{% endblock logo %}
-
-{% block script %}
-{{ super() }}
-<script type='text/javascript'>
-  function _remove_redirects_param() {
-    // remove ?redirects= param from URL so that
-    // successful page loads don't increment the redirect loop counter
-    if (window.location.search.length <= 1) {
-      return;
-    }
-    var search_parameters = window.location.search.slice(1).split('&');
-    for (var i = 0; i < search_parameters.length; i++) {
-      if (search_parameters[i].split('=')[0] === 'redirects') {
-        // remote token from search parameters
-        search_parameters.splice(i, 1);
-        var new_search = '';
-        if (search_parameters.length) {
-          new_search = '?' + search_parameters.join('&');
-        }
-        var new_url = window.location.origin +
-                      window.location.pathname +
-                      new_search +
-                      window.location.hash;
-        window.history.replaceState({}, "", new_url);
-        return;
-      }
-    }
-  }
-  _remove_redirects_param();
-</script>
-{% endblock script %}
-"""
 
 
 def _exclude_home(path_list):
@@ -735,7 +684,8 @@ class SingleUserNotebookAppMixin(Configurable):
         # patch jinja env loading to modify page template
         def get_page(name):
             if name == 'page.html':
-                return page_template
+                overridden_page_template_file = Path(__file__).parent / "templates" / "page_template.html"
+                return overridden_page_template_file.read_text()
 
         orig_loader = env.loader
         env.loader = ChoiceLoader([FunctionLoader(get_page), orig_loader])
