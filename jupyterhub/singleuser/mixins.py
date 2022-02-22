@@ -684,7 +684,7 @@ class SingleUserNotebookAppMixin(Configurable):
         # patch jinja env loading to modify page template
         def get_page(name):
             if name == 'page.html':
-                overridden_page_template_file = Path(__file__).parent / "page_template.html"
+                overridden_page_template_file = Path(__file__).parent / "templates" / "page_template.html"
                 return overridden_page_template_file.read_text()
 
         orig_loader = env.loader
