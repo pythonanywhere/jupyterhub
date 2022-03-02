@@ -5,6 +5,7 @@
 
 {% block above_header_container %}
   <iframe 
+    name="notebook_header"
     src="/jupyterhub_navbar?path={{notebook_path | urlencode}}"
     style="border:0; width:100%; overflow:hidden; scrolling: no; height: 50px; margin-bottom: -25px" 
   ></iframe>
