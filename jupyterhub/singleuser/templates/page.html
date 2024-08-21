@@ -1,25 +1,16 @@
-{#
-this template customizes all pages (classic notebook, not jupyterlab) served by the single-user server
-
-It makes the following modifications:
-
-- add jupyterhub control panel link to the header
-- update logo url to jupyterhub
-- remove `?redirects` url param that may be added by jupyterhub
-#}
 {% extends "templates/page.html" %}
 {% block header_buttons %}
-  {{ super() }}
-  <span>
-    <a href="{{ hub_control_panel_url }}"
-       id="jupyterhub-control-panel-link"
-       class="btn btn-default btn-sm navbar-btn pull-right"
-       style="margin-right: 4px;
-              margin-left: 2px">Control Panel</a>
-  </span>
-{% endblock header_buttons %}
+{% endblock %}
+
+{% block above_header_container %}
+  <iframe
+    name="notebook_header"
+    src="/jupyterhub_navbar?path={{notebook_path | urlencode}}"
+    style="border:0; width:100%; overflow:hidden; scrolling: no; height: 75px"
+  ></iframe>
+{% endblock %}
+
 {% block logo %}
-  <img src="{{ logo_url }}" alt="Jupyter Notebook" />
 {% endblock logo %}
 {% block script %}
   {{ super() }}
