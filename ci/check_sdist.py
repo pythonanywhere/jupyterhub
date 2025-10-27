@@ -5,7 +5,6 @@ import sys
 import tarfile
 
 expected_files = [
-    "docs/requirements.txt",
     "jsx/package.json",
     "package.json",
     "README.md",
